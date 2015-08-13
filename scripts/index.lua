@@ -2,10 +2,6 @@
 pos_x = 5
 pos_y = 1
 map = "map1"
-can_go_up = true
-can_go_down = false
-can_go_left = true
-can_go_right = true
 -- END DEBUG
 
 -- GPU Setup
@@ -17,7 +13,7 @@ hero_y = pos_y * 32
 move = "STAY"
 
 -- Map Loading
-dofile(System.currentDirectory().."/maps/map1.lua")
+dofile(System.currentDirectory().."/maps/"..map..".lua")
 
 -- Hero Loading
 hero = Screen.loadImage(System.currentDirectory().."/chars/hero.png")
@@ -32,7 +28,22 @@ hero_tile_y = 0
 anim_timer = Timer.new()
 Timer.pause(anim_timer)
 
--- Hero Collision Check
+-- Random Encounter
+random_escaper = 0
+function RandomEncounter()
+	random_escaper = random_escaper + 1
+	if rnd_encounter and random_escaper >= 5 then
+		h,m,s = System.getTime()
+		math.randomseed(h*3600+m*60+s)
+		tckt = math.random(1,100)
+		if tckt >= 70 then
+			random_escaper = 0
+			-- TODO: Start battle
+		end
+	end
+end
+
+-- Hero Collision Check (TODO: Add NPCs, unwalkable blocks collision checks)
 function HeroCollision()
 	if pos_x == 0 then
 		can_go_left = false
@@ -90,6 +101,7 @@ while true do
 	end
 	if hero_y + 120 > map_height then
 		if deboard_y == 0 then
+			draw_height = 120 + (map_height - hero_y)
 		else
 			draw_height = (hero_y + 120) - map_height + deboard_y
 		end
@@ -150,14 +162,14 @@ while true do
 	
 	-- Drawing Scene
 	Graphics.initBlend(TOP_SCREEN)
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_test)
+	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_test) -- Draw Level1 Map (GPU)
 	Graphics.termBlend()
-	Screen.drawPartialImage(200 - (hero_width / 2), 120 - (hero_height / 2), hero_tile_x, hero_tile_y, hero_width, hero_height, hero, TOP_SCREEN) -- Draw Hero
+	Screen.drawPartialImage(200 - (hero_width / 2), 120 - (hero_height / 2), hero_tile_x, hero_tile_y, hero_width, hero_height, hero, TOP_SCREEN) -- Draw Hero (CPU)
 	
 	-- DEBUG
-	if Controls.check(pad,KEY_SELECT) then
-		System.takeScreenshot("/rpg.jpg",true)
+	if Controls.check(pad,KEY_SELECT) and (not Controls.check(oldpad,KEY_SELECT)) then
 		Screen.freeImage(hero)
+		Graphics.term()
 		Timer.CRASH_ME_NOW()
 	end
 	Screen.debugPrint(0,0,"X: "..pos_x.. " ("..hero_x.." pixels)",Color.new(255,255,255),BOTTOM_SCREEN)
@@ -216,6 +228,7 @@ while true do
 			hero_tile_x = hero_width
 			pos_x = new_pos_x
 			pos_y = new_pos_y
+			RandomEncounter()
 		end
 	end
 	Screen.flip()
