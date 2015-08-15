@@ -2,10 +2,15 @@
 pos_x = 5
 pos_y = 1
 map = "map1"
+event1 = false
 -- END DEBUG
 
 -- GPU Setup
 Graphics.init()
+
+-- Font Setup
+def_font = Font.load(System.currentDirectory().."/fonts/main.ttf")
+Font.setPixelSizes(def_font,16)
 
 -- Position Setup
 hero_x = 16 + pos_x * 32
@@ -13,7 +18,8 @@ hero_y = pos_y * 32
 move = "STAY"
 
 -- Map Loading
-dofile(System.currentDirectory().."/maps/"..map..".lua")
+dofile(System.currentDirectory().."/maps/"..map.."/map.lua")
+dofile(System.currentDirectory().."/maps/"..map.."/events.lua")
 map_max_x = (map_width / 32) - 1
 map_max_y = (map_height / 32) - 1
 
@@ -33,7 +39,7 @@ hero_tile_y = 0
 anim_timer = Timer.new()
 Timer.pause(anim_timer)
 
--- Random Encounter
+-- Random Encounter function
 random_escaper = 0
 function RandomEncounter()
 	random_escaper = random_escaper + 1
@@ -47,6 +53,10 @@ function RandomEncounter()
 		end
 	end
 end
+
+-- Loading modules
+dofile(System.currentDirectory().."/scripts/dialogs.lua") -- Dialogs Module
+dofile(System.currentDirectory().."/scripts/rendering.lua") -- Rendering Module
 
 -- Hero Collision Check (TODO: Add NPCs collision checks, level2/3 unwalkable blocks collision checks)
 function HeroCollision()
@@ -179,12 +189,10 @@ while true do
 	end
 	
 	-- Drawing Scene through GPU
-	Graphics.initBlend(TOP_SCREEN)
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l1) -- Level1 Map
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l2) -- Level2 Map
-	Graphics.drawPartialImage(math.tointeger(200 - (hero_width / 2)), math.tointeger(120 - (hero_height / 2)), hero_tile_x, hero_tile_y, hero_width, hero_height, hero) -- Hero
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l3) -- Level3 Map
-	Graphics.termBlend()
+	RenderMapScene()
+	
+	-- Events Triggering
+	MapEvents()
 	
 	-- DEBUG
 	if Controls.check(pad,KEY_SELECT) and (not Controls.check(oldpad,KEY_SELECT)) then
@@ -194,6 +202,7 @@ while true do
 		Graphics.freeImage(map_l2)
 		Graphics.freeImage(map_l3)		
 		Graphics.term()
+		Timer.destroy(anim_timer)
 		Timer.CRASH_ME_NOW()
 	end
 	Screen.debugPrint(0,0,"X: "..pos_x.. " ("..hero_x.." pixels)",Color.new(255,255,255),BOTTOM_SCREEN)
