@@ -3,6 +3,7 @@ pos_x = 5
 pos_y = 1
 map = "map1"
 event1 = false
+party = {"hero","hero2","hero3","hero4"}
 -- END DEBUG
 
 -- GPU Setup
@@ -49,7 +50,7 @@ function RandomEncounter()
 		tckt = math.random(1,100)
 		if tckt >= 70 then
 			random_escaper = 0
-			-- TODO: Start battle
+			CallBattle({monsters[math.random(1,#monsters)]},false)
 		end
 	end
 end
@@ -57,6 +58,8 @@ end
 -- Loading modules
 dofile(System.currentDirectory().."/scripts/dialogs.lua") -- Dialogs Module
 dofile(System.currentDirectory().."/scripts/rendering.lua") -- Rendering Module
+dofile(System.currentDirectory().."/scripts/battle.lua") -- Battle Module
+dofile(System.currentDirectory().."/scripts/debug.lua") -- Debug Module
 
 -- Hero Collision Check (TODO: Add NPCs collision checks, level2/3 unwalkable blocks collision checks)
 function HeroCollision()
