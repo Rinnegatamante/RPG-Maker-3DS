@@ -1,6 +1,8 @@
 -- Default colors
 black = Color.new(0,0,0)
+white = Color.new(255,255,255)
 window = Color.new(132,205,255,120)
+selected_window = Color.new(255,255,132,120)
 
 -- Last space check for text integrity
 function LastSpace(text)
