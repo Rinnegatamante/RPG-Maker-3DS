@@ -1,5 +1,9 @@
--- Random Encounter Setting
+-- Random Encounter Settings
 rnd_encounter = true
+monsters = {"Goblin"}
+
+-- Battlegrounds Settings
+bgs = {"bg1"}
 
 -- Map Size
 map_width = 960
