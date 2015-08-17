@@ -5,3 +5,9 @@ function Print(text)
 	Screen.flip()
 	Screen.waitVblankStart()
 end
+
+function EnableScreenshots()
+	if Controls.check(Controls.read(), KEY_SELECT) then
+		System.takeScreenshot("/rpgmaker_sshot.bmp",false)
+	end
+end
