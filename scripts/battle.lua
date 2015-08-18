@@ -11,16 +11,7 @@ function CallBattle(enemies,is_boss_fight)
 	bg_img = Graphics.loadImage(bg)
 	
 	-- Loading party charsets
-	i = 2
-	battle_party = {hero}
-	while i <= #party do
-		Print("Loading Char #"..i)
-		tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png")
-		tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
-		Screen.flipImage(tmp,tmp2)
-		table.insert(battle_party, Graphics.loadImage(tmp2))
-		i = i + 1
-	end
+	battle_party = party_chars
 	
 	-- Loading enemies info
 	battle_enemies = {}

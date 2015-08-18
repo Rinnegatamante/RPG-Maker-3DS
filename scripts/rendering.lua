@@ -1,3 +1,20 @@
+function FormatTime(seconds)
+	minute = math.floor(seconds/60)
+	seconds = math.floor(seconds%60)
+	hours = math.floor(minute/60)
+	minute = minute%60
+	if minute < 10 then
+		minute = "0"..minute
+	end
+	if seconds < 10 then
+		seconds = "0"..seconds
+	end
+	if hours < 10 then
+		hours = "0"..hours
+	end
+	return hours..":"..minute..":"..seconds
+end
+
 function RenderMapScene()
 	Graphics.initBlend(TOP_SCREEN)
 	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l1) -- Level1 Map
@@ -75,5 +92,52 @@ function RenderCommandsMenu(items_list,selected)
 		end
 		Font.print(def_font,x + 5, y + 2, voice, black, BOTTOM_SCREEN)
 		y = y + 25
+	end
+end
+
+function RenderPauseMenu()
+	y = 3
+	max_y = 20 * #pause_voices
+	-- Main Menu
+	Screen.fillEmptyRect(0 , 100, 0, 2 + max_y, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 99, 0, 1 + max_y, window, BOTTOM_SCREEN)
+	for i, voice in pairs(pause_voices) do
+		if i == pause_i then
+			Screen.fillRect(1, 99, 1 + 20 * (i - 1),  1 + 20 * i, Color.new(0, 128, 255), BOTTOM_SCREEN)
+			Font.print(def_font, 3, y, voice, Color.new(255,255,0), BOTTOM_SCREEN)
+		else
+			Font.print(def_font, 3, y, voice, white, BOTTOM_SCREEN)
+		end
+		y = y + 20
+	end
+	
+	-- Info Window
+	Screen.fillEmptyRect(0 , 100, 2 + max_y, 239, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 99, 3 + max_y, 238, window, BOTTOM_SCREEN)
+	Font.print(def_font, 33, 5 + max_y, "Gold", Color.new(255,255,0), BOTTOM_SCREEN)
+	Font.print(def_font, 8, 25 + max_y, gold, white, BOTTOM_SCREEN)
+	Font.print(def_font, 32, 65 + max_y, "Time", Color.new(255,255,0), BOTTOM_SCREEN)
+	Font.print(def_font, 8, 85 + max_y, FormatTime(Timer.getTime(game_time) / 1000), white, BOTTOM_SCREEN)
+	
+	-- Characters Window
+	Screen.fillEmptyRect(100 , 319, 0, 239, white, BOTTOM_SCREEN)
+	Screen.fillRect(101 , 318, 1, 238, window, BOTTOM_SCREEN)
+	char_y = 15
+	for i, chara in pairs(party) do
+		Font.print(def_font, 115, char_y - 10, chara, Color.new(255,255,0), BOTTOM_SCREEN)
+		Font.print(def_font, 210, char_y - 10, "Lv. " .. party_stats[i].level, white, BOTTOM_SCREEN)
+		Font.setPixelSizes(def_font,14)
+		if (100 * ((party_stats[i].hp_max - party_stats[i].hp) / party_stats[i].hp_max)) >= 85 then
+			Font.print(def_font, 110, char_y + 5, "HP: " .. party_stats[i].hp .. " / " .. party_stats[i].hp_max , Color.new(255,0,0), BOTTOM_SCREEN)
+		elseif (100 * ((party_stats[i].hp_max - party_stats[i].hp) / party_stats[i].hp_max)) >= 60 then
+			Font.print(def_font, 110, char_y + 5, "HP: " .. party_stats[i].hp .. " / " .. party_stats[i].hp_max , Color.new(255,255,0), BOTTOM_SCREEN)
+		else
+			Font.print(def_font, 110, char_y + 5, "HP: " .. party_stats[i].hp .. " / " .. party_stats[i].hp_max , white, BOTTOM_SCREEN)
+		end
+		Font.print(def_font, 210, char_y + 5, "MP: " .. party_stats[i].mp .. " / " .. party_stats[i].mp_max , white, BOTTOM_SCREEN)
+		Font.print(def_font, 110, char_y + 20, "EXP: " .. party_stats[i].exp .. " / " .. party_stats[i].exp_to_level , white, BOTTOM_SCREEN)
+		Screen.drawPartialImage(280, char_y, hero_width, hero_height, hero_width, hero_height , raw_party_chars[i], BOTTOM_SCREEN)
+		char_y = char_y + 59
+		Font.setPixelSizes(def_font,16)
 	end
 end

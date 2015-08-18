@@ -59,12 +59,45 @@ while true do
 	if Controls.check(pad,KEY_A) and not Controls.check(oldpad,KEY_A) then
 		if index == 1 then -- New Game
 			dofile(System.currentDirectory().."/settings/new_game.lua")
+			
+			-- Heroes Stats (For initial party)
+			for i, p in pairs(party) do
+				dofile(System.currentDirectory().."/settings/"..p..".lua")
+				table.insert(party_stats, hero)
+			end
+
+			-- Loading Party Charsets
+			party_chars = {}
+			raw_party_chars = {}
+	
+			-- Main Hero
+			tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[1]..".png")
+			tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
+			Screen.flipImage(tmp,tmp2)
+			hero = Graphics.loadImage(tmp2)
+	
+			-- Secondary Heroes
+			for i, tmp in pairs(party) do
+				table.insert(raw_party_chars, Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png"))
+				if i > 1 then
+					tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png")
+					tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
+					Screen.flipImage(tmp,tmp2)
+					table.insert(party_chars, Graphics.loadImage(tmp2))
+				else
+					table.insert(party_chars, hero)
+				end
+			end
+			
+			-- Starting Game
 			dofile(System.currentDirectory().."/scripts/map.lua")
+			
 		elseif index == 2 then -- Load Game (TODO)
 		elseif index == 3 then -- Credits
 			dofile(System.currentDirectory().."/settings/credits.lua")
 			dofile(System.currentDirectory().."/scripts/credits.lua")
 		elseif index == 4 then -- Exit Game
+			Screen.freeImage(splash)
 			Font.unload(def_font)
 			System.exit()
 		end

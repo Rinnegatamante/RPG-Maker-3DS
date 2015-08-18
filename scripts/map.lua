@@ -5,6 +5,7 @@ Graphics.init()
 hero_x = 16 + pos_x * 32
 hero_y = pos_y * 32
 move = "STAY"
+in_game = true
 
 -- Map Loading
 dofile(System.currentDirectory().."/maps/"..map.."/map.lua")
@@ -13,10 +14,6 @@ map_max_x = (map_width / 32) - 1
 map_max_y = (map_height / 32) - 1
 
 -- Hero Loading
-tmp = Screen.loadImage(System.currentDirectory().."/chars/hero.png")
-tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
-Screen.flipImage(tmp,tmp2)
-hero = Graphics.loadImage(tmp2)
 hero_max_tile_x = 32 * 3
 hero_max_tile_y = 32 * 4
 hero_width = hero_max_tile_x / 3
@@ -27,6 +24,9 @@ hero_tile_y = 0
 -- Animation Setup
 anim_timer = Timer.new()
 Timer.pause(anim_timer)
+
+-- Pause Menu Setup
+pause_voices = {"Items","Magic","Equipment","Status","Save Game","Exit Game"}
 
 -- Random Encounter function
 random_escaper = 0
@@ -80,7 +80,7 @@ function HeroCollision()
 	end
 end
 
-while true do
+while in_game do
 
 	-- Engine Setup
 	pad = Controls.read()
@@ -123,29 +123,43 @@ while true do
 	end
 	
 	-- Hero Movement Triggering
-	if Controls.check(pad,KEY_DUP) and move == "STAY" then
-		HeroCollision()
-		if can_go_up then
-			move = "UP"
-			move_stage = 1
-			tot_move_stage = 1
-			Timer.resume(anim_timer)
-			hero_tile_x = 0
-		else
-			move = "STAY"
-			hero_tile_y = hero_height * 3
+	if Controls.check(pad,KEY_DUP) then
+		if move == "STAY" then
+			HeroCollision()
+			if can_go_up then
+				move = "UP"
+				move_stage = 1
+				tot_move_stage = 1
+				Timer.resume(anim_timer)
+				hero_tile_x = 0
+			else
+				move = "STAY"
+				hero_tile_y = hero_height * 3
+			end
+		elseif move == "PAUSE" and not Controls.check(oldpad, KEY_DUP) then
+			pause_i = pause_i - 1
+			if pause_i == 0 then
+				pause_i = 1
+			end
 		end
-	elseif Controls.check(pad,KEY_DDOWN) and move == "STAY" then
-		HeroCollision()
-		if can_go_down then
-			move = "DOWN"
-			move_stage = 1
-			tot_move_stage = 1
-			Timer.resume(anim_timer)
-			hero_tile_x = 0
-		else
-			move = "STAY"
-			hero_tile_y = 0
+	elseif Controls.check(pad,KEY_DDOWN) then
+		if move == "STAY" then
+			HeroCollision()
+			if can_go_down then
+				move = "DOWN"
+				move_stage = 1
+				tot_move_stage = 1
+				Timer.resume(anim_timer)
+				hero_tile_x = 0
+			else
+				move = "STAY"
+				hero_tile_y = 0
+			end
+		elseif move == "PAUSE" and not Controls.check(oldpad, KEY_DDOWN) then
+			pause_i = pause_i + 1
+			if pause_i > #pause_voices then
+				pause_i = #pause_voices
+			end
 		end
 	elseif Controls.check(pad,KEY_DLEFT) and move == "STAY" then
 		HeroCollision()
@@ -171,33 +185,54 @@ while true do
 			move = "STAY"
 			hero_tile_y = hero_height * 2
 		end
+	elseif Controls.check(pad,KEY_START) and not Controls.check(oldpad, KEY_START) then
+		if move == "STAY" then
+			move = "PAUSE"
+			pause_i = 1
+		elseif move == "PAUSE" then
+			move = "STAY"
+		end
 	end
 	
 	-- Drawing Scene through GPU
 	RenderMapScene()
 	
+	-- Drawing Menu when enabled
+	if move == "PAUSE" then
+		RenderPauseMenu()
+		
+		-- Menu Controls
+		if Controls.check(pad, KEY_A) and not Controls.check(oldpad, KEY_A) then
+			if pause_i == 1 then
+			elseif pause_i == 2 then
+		
+			elseif pause_i == 3 then
+		
+			elseif pause_i == 4 then
+		
+			elseif pause_i == 5 then
+		
+			elseif pause_i == 6 then
+				Graphics.freeImage(hero)
+				Graphics.freeImage(map_l1)
+				Graphics.freeImage(map_l2)
+				Graphics.freeImage(map_l3)		
+				Graphics.term()
+				Timer.destroy(anim_timer)
+				in_game = false
+			end
+		end
+	end
+	
 	-- Events Triggering
 	MapEvents()
 	
 	-- DEBUG
-	if Controls.check(pad,KEY_SELECT) and (not Controls.check(oldpad,KEY_SELECT)) then
-		System.takeScreenshot("/rpgm.bmp",false)
-		Graphics.freeImage(hero)
-		Graphics.freeImage(map_l1)
-		Graphics.freeImage(map_l2)
-		Graphics.freeImage(map_l3)		
-		Graphics.term()
-		Timer.destroy(anim_timer)
-		Timer.CRASH_ME_NOW()
-	end
-	Screen.debugPrint(0,0,"X: "..pos_x.. " ("..hero_x.." pixels)",Color.new(255,255,255),BOTTOM_SCREEN)
-	Screen.debugPrint(0,15,"Y: "..pos_y.. " ("..hero_y.." pixels)",Color.new(255,255,255),BOTTOM_SCREEN)
-	Screen.debugPrint(0,30,"Map Width: "..(map_max_x),Color.new(255,255,255),BOTTOM_SCREEN)
-	Screen.debugPrint(0,45,"Map Height: "..(map_max_y),Color.new(255,255,255),BOTTOM_SCREEN)
+	EnableScreenshots()
 	-- END DEBUG
 	
 	-- Hero Animation
-	if move ~= "STAY" then
+	if move == "UP" or move == "DOWN" or move == "RIGHT" or move == "LEFT" then
 		if move == "UP" then
 			pos_molt = 3
 			hxm = 0
@@ -249,6 +284,7 @@ while true do
 			RandomEncounter()
 		end
 	end
+	
 	Screen.flip()
 	Screen.waitVblankStart()
 	oldpad = pad

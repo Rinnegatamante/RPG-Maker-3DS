@@ -7,54 +7,12 @@ map = "map1"
 event1 = false
 -- END DEBUG
 
--- New Game Party
-party = {"hero","hero2","hero3","hero4"}
+-- New Game Items and Gold (TODO: Items)
+gold = 1000
 
--- Heroes Stats
-hero1 = {
-		["attack_type"] = "Hands",		
-		["attack_min"] = 5,
-		["attack_max"] = 6,
-		["level"] = 5,
-		["defense"] = 25,
-		["hp"] = 100,
-		["mp"] = 15,
-		["exp"] = 0,
-		["equip"] = {} -- TODO: Equip Managing
-}
-		
-hero2 = {
-		["attack_type"] = "Hands",		
-		["attack_min"] = 5,
-		["attack_max"] = 6,
-		["level"] = 5,
-		["defense"] = 25,
-		["hp"] = 100,
-		["mp"] = 15,
-		["exp"] = 0,
-		["equip"] = {} -- TODO: Equip Managing
-}
-		
-hero3 = {
-		["attack_type"] = "Hands",		
-		["attack_min"] = 5,
-		["attack_max"] = 6,
-		["level"] = 5,
-		["defense"] = 25,
-		["hp"] = 100,
-		["mp"] = 15,
-		["exp"] = 0,
-		["equip"] = {} -- TODO: Equip Managing
-}
-		
-hero4 = {
-		["attack_type"] = "Hands",		
-		["attack_min"] = 5,
-		["attack_max"] = 6,
-		["level"] = 5,
-		["defense"] = 25,
-		["hp"] = 100,
-		["mp"] = 15,
-		["exp"] = 0,
-		["equip"] = {} -- TODO: Equip Managing
-}
+-- Game Timer
+game_time = Timer.new()
+
+-- New Game Party
+party = {"hero1","hero2","hero3","hero4"}
+party_stats = {}
