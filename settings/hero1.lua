@@ -1,5 +1,4 @@
 hero = {
-		["attack_type"] = "Hands",		
 		["attack_min"] = 5,
 		["attack_max"] = 6,
 		["level"] = 5,
@@ -10,5 +9,15 @@ hero = {
 		["mp_max"] = 15,
 		["exp"] = 0,
 		["exp_to_level"] = 500,
-		["equip"] = {} -- TODO: Equip Managing
+		["speed"] = 80,
+		["crit_hit"] = 5,
+		["equip"] = {
+			["Weapon"] = "Steel Blade",
+			["Hands"] = "",
+			["Chest"] = "Steel Armor",
+			["Shield"] = "Iron Shield",
+			["Hair"] = "",
+			["Foots"] = "",
+			["Accessory"] = "",
+		}
 }
