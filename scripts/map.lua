@@ -137,9 +137,16 @@ while in_game do
 				hero_tile_y = hero_height * 3
 			end
 		elseif move == "PAUSE" and not Controls.check(oldpad, KEY_DUP) then
-			pause_i = pause_i - 1
-			if pause_i == 0 then
-				pause_i = 1
+			if submode == "MAIN" then
+				pause_i = pause_i - 1
+				if pause_i == 0 then
+					pause_i = 1
+				end
+			elseif submode == "CHARACTERS" then
+				char_i = char_i - 1
+				if char_i == 0 then
+					char_i = #party
+				end
 			end
 		end
 	elseif Controls.check(pad,KEY_DDOWN) then
@@ -156,9 +163,16 @@ while in_game do
 				hero_tile_y = 0
 			end
 		elseif move == "PAUSE" and not Controls.check(oldpad, KEY_DDOWN) then
-			pause_i = pause_i + 1
-			if pause_i > #pause_voices then
-				pause_i = #pause_voices
+			if submode == "MAIN" then
+				pause_i = pause_i + 1
+				if pause_i > #pause_voices then
+					pause_i = #pause_voices
+				end
+			elseif submode == "CHARACTERS" then
+				char_i = char_i + 1
+				if char_i > #party then
+					char_i = 1
+				end
 			end
 		end
 	elseif Controls.check(pad,KEY_DLEFT) and move == "STAY" then
@@ -188,6 +202,7 @@ while in_game do
 	elseif Controls.check(pad,KEY_START) and not Controls.check(oldpad, KEY_START) then
 		if move == "STAY" then
 			move = "PAUSE"
+			submode = "MAIN"
 			pause_i = 1
 		elseif move == "PAUSE" then
 			move = "STAY"
@@ -203,23 +218,37 @@ while in_game do
 		
 		-- Menu Controls
 		if Controls.check(pad, KEY_A) and not Controls.check(oldpad, KEY_A) then
-			if pause_i == 1 then
-			elseif pause_i == 2 then
+			if submode == "MAIN" then
+				if pause_i == 1 then
+				elseif pause_i == 2 then
 		
-			elseif pause_i == 3 then
+				elseif pause_i == 3 then
 		
-			elseif pause_i == 4 then
+				elseif pause_i == 4 then -- Status
+					submode = "CHARACTERS"
+					char_i = 1
+				elseif pause_i == 5 then
 		
-			elseif pause_i == 5 then
-		
-			elseif pause_i == 6 then
-				Graphics.freeImage(hero)
-				Graphics.freeImage(map_l1)
-				Graphics.freeImage(map_l2)
-				Graphics.freeImage(map_l3)		
-				Graphics.term()
-				Timer.destroy(anim_timer)
-				in_game = false
+				elseif pause_i == 6 then -- Exit Game
+					Graphics.freeImage(hero)
+					Graphics.freeImage(map_l1)
+					Graphics.freeImage(map_l2)
+					Graphics.freeImage(map_l3)		
+					Graphics.term()
+					Timer.destroy(anim_timer)
+					in_game = false
+				end
+			elseif submode == "CHARACTERS" then
+				if pause_i == 4 then -- Open Status Page
+					dofile(System.currentDirectory().."/scripts/status.lua")
+				end
+			end
+		end
+		if Controls.check(pad, KEY_B) and not Controls.check(oldpad, KEY_B) then
+			if submode == "MAIN" then
+				move = "STAY"
+			elseif submode == "CHARACTERS" then
+				submode = "MAIN"
 			end
 		end
 	end

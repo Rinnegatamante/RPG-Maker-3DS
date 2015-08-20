@@ -27,27 +27,6 @@ end
 function RenderBattleScene()
 	x = 30
 	y = 50
-	Graphics.initBlend(TOP_SCREEN)
-	Graphics.drawImage(0,0,bg_img)
-	for i,hero in pairs(battle_party) do
-		Graphics.drawPartialImage(x, y, 32, 64, 32, 32, hero)
-		x = x + 5
-		y = y + 50
-	end
-	-- TODO: Better enemies auto-locator
-	x = 300
-	y = 100
-	for i,enemy in pairs(battle_enemies) do
-		Graphics.drawImage(x, y, enemy[1])
-		x = x + 5
-		y = y + 50
-	end
-	Graphics.termBlend()
-end
-
-function RenderBattleScene()
-	x = 30
-	y = 50
 	ch_x = x
 	ch_y = y
 	Graphics.initBlend(TOP_SCREEN)
@@ -95,9 +74,46 @@ function RenderCommandsMenu(items_list,selected)
 	end
 end
 
+function RenderStatusMenu()
+	
+	-- Stats Window
+	Screen.fillEmptyRect(0 , 116, 0, 145, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 115, 1, 144, window, BOTTOM_SCREEN)
+	Screen.drawPartialImage(85, 5, hero_width, hero_height, hero_width, hero_height , raw_party_chars[char_i], BOTTOM_SCREEN)
+	Font.print(def_font, 5, 5, party[char_i] .. " (Lv. " .. party_stats[char_i].level .. ")", Color.new(255,255,0), BOTTOM_SCREEN)
+	Font.print(def_font, 5, 20, "HP: " .. party_stats[char_i].hp .. " - " .. party_stats[char_i].hp_max, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 35, "MP: " .. party_stats[char_i].mp .. " - " .. party_stats[char_i].mp_max, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 50, "Attack: " .. party_stats[char_i].attack_min .. " - " .. party_stats[char_i].attack_max, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 65, "Magic Atk.: " .. party_stats[char_i].magic_attack, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 80, "Defense: " .. party_stats[char_i].defense, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 95, "Magic Def.: " .. party_stats[char_i].magic_defense, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 110, "Speed: " .. party_stats[char_i].speed, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 125, "Crit. Hit: " .. party_stats[char_i].crit_hit .. "%", white, BOTTOM_SCREEN)
+	
+	-- Immunity/Resistence Window
+	Screen.fillEmptyRect(0 , 319, 145, 239, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 318, 146, 238, window, BOTTOM_SCREEN)
+	Font.print(def_font, 130, 148, "Resistence: ", Color.new(255,255,0), BOTTOM_SCREEN)
+	Font.print(def_font, 50, 163, "Melee: " .. party_stats[char_i].resistence.melee .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 200, 163, "Ranged: " .. party_stats[char_i].resistence.ranged .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 50, 178, "Magic: " .. party_stats[char_i].resistence.magic .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 200, 178, "Fire: " .. party_stats[char_i].resistence.fire .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 50, 193, "Ice: " .. party_stats[char_i].resistence.ice .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 200, 193, "Thunder: " .. party_stats[char_i].resistence.thunder .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 50, 208, "Water: " .. party_stats[char_i].resistence.water .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 200, 208, "Sancta: " .. party_stats[char_i].resistence.sancta .. "%", white, BOTTOM_SCREEN)
+	Font.print(def_font, 50, 223, "Dark: " .. party_stats[char_i].resistence.dark .. "%", white,  BOTTOM_SCREEN)
+	Font.print(def_font, 200, 223, "Ade: " .. party_stats[char_i].resistence.ade .. "%", white, BOTTOM_SCREEN)
+	
+	-- Equip Window
+	Screen.fillEmptyRect(116 , 319, 0, 145, white, BOTTOM_SCREEN)
+	Screen.fillRect(117 , 318, 1, 144, window, BOTTOM_SCREEN)
+end
+
 function RenderPauseMenu()
 	y = 3
 	max_y = 20 * #pause_voices
+	
 	-- Main Menu
 	Screen.fillEmptyRect(0 , 100, 0, 2 + max_y, white, BOTTOM_SCREEN)
 	Screen.fillRect(1 , 99, 0, 1 + max_y, window, BOTTOM_SCREEN)
@@ -124,6 +140,11 @@ function RenderPauseMenu()
 	Screen.fillRect(101 , 318, 1, 238, window, BOTTOM_SCREEN)
 	char_y = 15
 	for i, chara in pairs(party) do
+		if submode == "CHARACTERS" then
+			if char_i == i then
+				Screen.fillRect(101, 318, 1 + 59 * (i - 1), 1 + 59 * i, Color.new(0, 128, 255), BOTTOM_SCREEN)
+			end
+		end
 		Font.print(def_font, 115, char_y - 10, chara, Color.new(255,255,0), BOTTOM_SCREEN)
 		Font.print(def_font, 210, char_y - 10, "Lv. " .. party_stats[i].level, white, BOTTOM_SCREEN)
 		Font.setPixelSizes(def_font,14)
