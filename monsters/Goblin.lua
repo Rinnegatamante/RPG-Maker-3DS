@@ -3,7 +3,7 @@ name = "Goblin"
 sprite = "Goblin"
 
 -- Attack Settings
-attack_type = "Axe"
+attack_type = "Melee"
 attack_min = 1
 attack_max = 5
 
