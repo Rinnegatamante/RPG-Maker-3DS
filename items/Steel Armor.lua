@@ -2,15 +2,13 @@
 name = "Steel Armor"
 description = "A resistent steel armor."
 
--- Icon
-tileset = "equip1"
-tile_x = 2 * 32
-tile_y = 10 * 32
-
 -- Item Info
 slot = "Chest"
 def = 10
-atk = 0
+m_def = 2
+atk_min = 0
+atk_max = 0
+m_atk = 0
 speed = -5
 crit_hit = 0
 immunity = {}

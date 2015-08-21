@@ -2,15 +2,13 @@
 name = "Hat"
 description = "A simple leather hat."
 
--- Icon
-tileset = "equip1"
-tile_x = 2 * 32
-tile_y = 8 * 32
-
 -- Item Info
 slot = "Hair"
 def = 3
-atk = 0
+m_def = 5
+atk_min = 0
+atk_max = 0
+m_atk = 0
 speed = 0
 crit_hit = 0
 immunity = {}

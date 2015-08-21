@@ -2,16 +2,14 @@
 name = "Steel Blade"
 description = "Common steel blade."
 
--- Icon
-tileset = "equip1"
-tile_x = 3 * 32
-tile_y = 0 * 32
-
 -- Item Info
 slot = "Weapon"
-atk_type = "Blade"
+atk_type = "Melee"
 def = 0
-atk = 10
+m_def = 0
+atk_min = 10
+atk_max = 15
+m_atk = 2
 speed = 0
 crit_hit = 25
 immunity = {}
