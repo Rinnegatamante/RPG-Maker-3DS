@@ -1,3 +1,10 @@
+function OneshotPrint(my_func)
+	my_func()
+	Screen.flip()
+	Screen.refresh()
+	my_func()
+end
+
 function FormatTime(seconds)
 	minute = math.floor(seconds/60)
 	seconds = math.floor(seconds%60)
@@ -75,14 +82,15 @@ function RenderCommandsMenu(items_list,selected)
 end
 
 function RenderStatusMenu()
+	Screen.clear(BOTTOM_SCREEN)
 	
 	-- Stats Window
 	Screen.fillEmptyRect(0 , 116, 0, 145, white, BOTTOM_SCREEN)
 	Screen.fillRect(1 , 115, 1, 144, window, BOTTOM_SCREEN)
 	Screen.drawPartialImage(85, 5, hero_width, hero_height, hero_width, hero_height , raw_party_chars[char_i], BOTTOM_SCREEN)
 	Font.print(def_font, 5, 5, party[char_i] .. " (Lv. " .. party_stats[char_i].level .. ")", Color.new(255,255,0), BOTTOM_SCREEN)
-	Font.print(def_font, 5, 20, "HP: " .. party_stats[char_i].hp .. " - " .. party_stats[char_i].hp_max, white, BOTTOM_SCREEN)
-	Font.print(def_font, 5, 35, "MP: " .. party_stats[char_i].mp .. " - " .. party_stats[char_i].mp_max, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 20, "HP: " .. party_stats[char_i].hp .. " / " .. party_stats[char_i].hp_max, white, BOTTOM_SCREEN)
+	Font.print(def_font, 5, 35, "MP: " .. party_stats[char_i].mp .. " / " .. party_stats[char_i].mp_max, white, BOTTOM_SCREEN)
 	Font.print(def_font, 5, 50, "Attack: " .. party_stats[char_i].attack_min .. " - " .. party_stats[char_i].attack_max, white, BOTTOM_SCREEN)
 	Font.print(def_font, 5, 65, "Magic Atk.: " .. party_stats[char_i].magic_attack, white, BOTTOM_SCREEN)
 	Font.print(def_font, 5, 80, "Defense: " .. party_stats[char_i].defense, white, BOTTOM_SCREEN)
@@ -108,6 +116,25 @@ function RenderStatusMenu()
 	-- Equip Window
 	Screen.fillEmptyRect(116 , 319, 0, 145, white, BOTTOM_SCREEN)
 	Screen.fillRect(117 , 318, 1, 144, window, BOTTOM_SCREEN)
+	Font.print(def_font, 120, 3, "Equipment:", Color.new(255,255,0), BOTTOM_SCREEN)
+	for i, item in pairs(party_stats[char_i].equip) do
+		if i == "Weapon" then
+			extra_y = 4
+		elseif i == "Hands" then
+			extra_y = 2
+		elseif i == "Chest" then
+			extra_y = 1
+		elseif i == "Shield" then
+			extra_y = 5
+		elseif i == "Hair" then
+			extra_y = 0
+		elseif i == "Foots" then
+			extra_y = 3
+		elseif i == "Accessory" then
+			extra_y = 6
+		end
+		Font.print(def_font, 120, 28 + 16 * extra_y, i .. ": " .. item, white, BOTTOM_SCREEN)
+	end
 end
 
 function RenderPauseMenu()
