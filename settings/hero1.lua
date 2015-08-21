@@ -27,11 +27,11 @@ hero = {
 		},
 		["equip"] = {
 			["Weapon"] = "Steel Blade",
-			["Hands"] = "",
+			["Hands"] = "Gloves",
 			["Chest"] = "Steel Armor",
 			["Shield"] = "Iron Shield",
-			["Hair"] = "",
-			["Foots"] = "",
-			["Accessory"] = ""
+			["Hair"] = "Hat",
+			["Foots"] = "Shoes",
+			["Accessory"] = "Gold Ring"
 		}
 }
