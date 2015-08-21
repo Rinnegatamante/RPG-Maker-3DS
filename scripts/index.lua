@@ -63,9 +63,35 @@ while true do
 			-- Heroes Stats (For initial party)
 			for i, p in pairs(party) do
 				dofile(System.currentDirectory().."/settings/"..p..".lua")
+				
+				-- Loading equip
+				for i, item in pairs(hero.equip) do
+					if item ~= "" then
+						dofile(System.currentDirectory().."/items/"..item..".lua")
+						hero.attack_min = hero.attack_min + atk_min
+						hero.attack_max = hero.attack_max + atk_max
+						hero.speed = hero.speed + speed
+						hero.crit_hit = hero.crit_hit + crit_hit
+						if hero.crit_hit > 100 then
+							hero.crit_hit = 100
+						end
+						hero.defense = hero.defense + def
+						hero.magic_defense = hero.magic_defense + m_def
+						for i, res in pairs(resistence) do
+							hero.resistence[res[2]] = hero.resistence[res[2]] + res[1]
+							if hero.resistence[res[2]] > 100 then
+								hero.resistence[res[2]] = 100
+							end
+						end
+						for i, res in pairs(immunity) do
+							hero.resistence[res[1]] = 100
+						end
+					end
+				end
+				
 				table.insert(party_stats, hero)
 			end
-
+			
 			-- Loading Party Charsets
 			party_chars = {}
 			raw_party_chars = {}
@@ -74,8 +100,8 @@ while true do
 			tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[1]..".png")
 			tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
 			Screen.flipImage(tmp,tmp2)
-			hero = Graphics.loadImage(tmp2)
-	
+			hero = Graphics.loadImage(tmp2)			
+			
 			-- Secondary Heroes
 			for i, tmp in pairs(party) do
 				table.insert(raw_party_chars, Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png"))
