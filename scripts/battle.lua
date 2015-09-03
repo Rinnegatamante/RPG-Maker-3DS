@@ -1,29 +1,76 @@
+-- PROTOTYPE! Enemy I.A.
+function IA(enemy)
+	if #enemy > 14 then -- TODO: Custom IA
+	else
+		if #enemy.spells > 0 then -- TODO: Enemy spells support
+		else
+			action = "attack"
+			target = math.random(1, #battle_party)
+		end
+	end
+end
+
 -- PROTOTYPE! Battle System function (TODO: Music, transitions, gameplay)
 function CallBattle(enemies,is_boss_fight)
+	
+	-- Battle Transition
+	tdir = System.listDirectory(System.currentDirectory().."/battle_transitions")
+	h,m,s = System.getTime()
+	math.randomseed(h*3600+m*60+s)
+	dofile(System.currentDirectory().."/battle_transitions/"..tdir[math.random(1, #tdir)].name)
+	
+	-- Initializing battle
+	order_game = {}
+	order_stats = {}
 	
 	-- Selecting Battleground
 	h,m,s = System.getTime()
 	math.randomseed(h*3600+m*60+s)
 	bg_id = bgs[math.random(1,#bgs)]
-	tmp = Screen.loadImage(System.currentDirectory().."/battlegrounds/"..bg_id..".png")
-	bg = Screen.createImage(1,1,Color.new(0,0,0))
-	Screen.flipImage(tmp, bg)
-	bg_img = Graphics.loadImage(bg)
+	bg_img = Graphics.loadImage(System.currentDirectory().."/battlegrounds/"..bg_id..".png")
 	
-	-- Loading party charsets
+	-- Loading party info
 	battle_party = party_chars
+	for i, hero in pairs(party_stats) do
+		if #order_game == 0 then
+			table.insert(order_game, party[i])
+			table.insert(order_stats, party_stats[i])
+		else
+			if hero.speed > order_stats[i-1].speed then
+				order_stats[i] = order_stats[i-1]
+				order_game[i] = order_game[i-1]
+				order_stats[i-1] = hero
+				order_game[i-1] = party[i]
+			end
+		end
+	end
 	
 	-- Loading enemies info
 	battle_enemies = {}
 	for i,enemy in pairs(enemies) do
 		dofile(System.currentDirectory().."/monsters/"..enemy..".lua")
-		tmp = Screen.loadImage(System.currentDirectory().."/sprites/"..sprite..".png")
-		enm = Screen.createImage(1,1,Color.new(0,0,0))
-		Screen.flipImage(tmp, enm)
-		enemy_img = Graphics.loadImage(enm)
+		enemy_img = Graphics.loadImage(System.currentDirectory().."/sprites/"..sprite..".png")
+		monster_info = {
+			["name"] = name,
+			["attack_type"] = attack_type, 
+			["attack_min"] = attack_min,
+			["attack_max"] = attack_max,
+			["spells"] = spells,
+			["defense"]	= defense,
+			["level"] = level,
+			["hp"] = hp,
+			["mp"] = mp,
+			["experience"] = experience,
+			["loot"] = loot,
+			["immunity"] = immunity,
+			["weakness"] = weakness,
+			["resistence"] = resistence
+		}
 		table.insert(battle_enemies,{enemy_img,monster_info})
+		if custom_ia then -- TODO: Custom IA for Boss fights or particular fights (like tutorials)
+		end
 	end
-		
+	
 	-- Battle System
 	end_battle = false
 	selected_voice = 1
@@ -69,7 +116,7 @@ function CallBattle(enemies,is_boss_fight)
 			end
 		end
 		
-		-- Animations
+		-- Animations (TODO)
 		if action == "escape" then
 			if Timer.getTime(battle_timer) > 2500 then
 				end_battle = true
