@@ -1,6 +1,14 @@
 -- GPU Setup
 Graphics.init()
 
+-- Hero Loading
+hero_max_tile_x = 32 * 3
+hero_max_tile_y = 32 * 4
+hero_width = hero_max_tile_x / 3
+hero_height = hero_max_tile_y / 4
+hero_tile_x = hero_width
+hero_tile_y = 0
+
 -- Position Setup
 hero_x = 16 + pos_x * 32
 hero_y = pos_y * 32
@@ -12,14 +20,9 @@ dofile(System.currentDirectory().."/maps/"..map.."/map.lua")
 dofile(System.currentDirectory().."/maps/"..map.."/events.lua")
 map_max_x = (map_width / 32) - 1
 map_max_y = (map_height / 32) - 1
-
--- Hero Loading
-hero_max_tile_x = 32 * 3
-hero_max_tile_y = 32 * 4
-hero_width = hero_max_tile_x / 3
-hero_height = hero_max_tile_y / 4
-hero_tile_x = hero_width
-hero_tile_y = 0
+layers = {level1, level2, level3}
+map_length = map_width / 32
+tileset_length = tileset_w / 32
 
 -- Animation Setup
 anim_timer = Timer.new()
@@ -43,7 +46,7 @@ function RandomEncounter()
 	end
 end
 
--- Hero Collision Check (TODO: Add NPCs collision checks, level2/3 unwalkable blocks collision checks)
+-- Hero Collision Check (TODO: Add NPCs collision checks)
 function HeroCollision()
 	raw_pos = pos_x + 1 + pos_y * (map_max_x + 1)
 	if pos_x == 0 then
@@ -231,9 +234,7 @@ while in_game do
 		
 				elseif pause_i == 6 then -- Exit Game
 					Graphics.freeImage(hero)
-					Graphics.freeImage(map_l1)
-					Graphics.freeImage(map_l2)
-					Graphics.freeImage(map_l3)		
+					Graphics.freeImage(t)	
 					Graphics.term()
 					Timer.destroy(anim_timer)
 					in_game = false
@@ -310,7 +311,9 @@ while in_game do
 			hero_tile_x = hero_width
 			pos_x = new_pos_x
 			pos_y = new_pos_y
-			RandomEncounter()
+			if not MapEvents() then
+				RandomEncounter()
+			end
 		end
 	end
 	
