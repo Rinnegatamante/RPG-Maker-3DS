@@ -47,6 +47,7 @@ function RandomEncounter()
 end
 
 -- Hero Collision Check (TODO: Add NPCs collision checks)
+no_clip = false
 function HeroCollision()
 	raw_pos = pos_x + 1 + pos_y * (map_max_x + 1)
 	if pos_x == 0 then
@@ -80,6 +81,12 @@ function HeroCollision()
 		if map_table[raw_pos + (map_max_x + 1)] == 2 then
 			can_go_down = false
 		end
+	end
+	if no_clip then
+		can_go_down = true
+		can_go_left = true
+		can_go_right = true
+		can_go_up = true
 	end
 end
 
@@ -259,6 +266,7 @@ while in_game do
 	
 	-- DEBUG
 	EnableScreenshots()
+	NoClipMode()
 	-- END DEBUG
 	
 	-- Hero Animation

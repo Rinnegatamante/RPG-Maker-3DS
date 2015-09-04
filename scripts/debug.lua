@@ -11,3 +11,11 @@ function EnableScreenshots()
 		System.takeScreenshot("/rpgmaker_sshot.bmp",false)
 	end
 end
+
+function NoClipMode()
+	if Controls.check(Controls.read(), KEY_L) then
+		no_clip = true
+	else
+		no_clip = false
+	end
+end
