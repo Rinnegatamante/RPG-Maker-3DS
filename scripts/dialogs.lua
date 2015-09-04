@@ -84,7 +84,7 @@ function ShowDialog(text,check_confirm)
 	if check_confirm then
 		-- TODO (Yes/No Dialog)
 	else
+		move = "STAY"
 		return true
 	end
-	move = "STAY"
 end
