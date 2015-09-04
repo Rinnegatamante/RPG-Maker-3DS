@@ -25,5 +25,5 @@ immunity = {}
 weakness = {}
 resistence = {}
 
--- Array Info
-monster_info = {name, attack_type, attack_min, attack_max, spells, defense, level, hp, mp, experience, loot, immunity, weakness, resistence}
+-- Custom I.A.
+custom_ia = false
