@@ -42,7 +42,7 @@ function RenderMapScene()
 				layer_index = 1 + math.floor(int_tile_x / 32) + math.floor(int_tile_y / 32) * map_length
 				id = layers[lind][layer_index]
 				if id ~= -1 then
-					id_y = math.floor((id / tileset_length) * 32)
+					id_y = math.floor(id / tileset_length) * 32
 					id_x = math.floor((id % tileset_length) * 32)
 					Graphics.drawPartialImage(int_x - t_dbd_x, int_y - t_dbd_y, id_x, id_y, 32, 32, t)
 				end
