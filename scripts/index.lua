@@ -97,19 +97,13 @@ while true do
 			raw_party_chars = {}
 	
 			-- Main Hero
-			tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[1]..".png")
-			tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
-			Screen.flipImage(tmp,tmp2)
-			hero = Graphics.loadImage(tmp2)			
+			hero = Graphics.loadImage(System.currentDirectory().."/chars/"..party[1]..".png")			
 			
 			-- Secondary Heroes
 			for i, tmp in pairs(party) do
 				table.insert(raw_party_chars, Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png"))
 				if i > 1 then
-					tmp = Screen.loadImage(System.currentDirectory().."/chars/"..party[i]..".png")
-					tmp2 = Screen.createImage(1,1,Color.new(0,0,0,0))
-					Screen.flipImage(tmp,tmp2)
-					table.insert(party_chars, Graphics.loadImage(tmp2))
+					table.insert(party_chars, Graphics.loadImage(System.currentDirectory().."/chars/"..party[i]..".png"))
 				else
 					table.insert(party_chars, hero)
 				end
