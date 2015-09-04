@@ -23,11 +23,39 @@ function FormatTime(seconds)
 end
 
 function RenderMapScene()
-	Graphics.initBlend(TOP_SCREEN)
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l1) -- Level1 Map
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l2) -- Level2 Map
-	Graphics.drawPartialImage(math.tointeger(200 - (hero_width / 2)), math.tointeger(120 - (hero_height / 2)), hero_tile_x, hero_tile_y, hero_width, hero_height, hero) -- Hero
-	Graphics.drawPartialImage(deboard_x, deboard_y, start_draw_x, start_draw_y, draw_width, draw_height, map_l3) -- Level3 Map
+	Graphics.initBlend(TOP_SCREEN)	
+	lind = 1
+	while lind <= 3 do
+		int_x = deboard_x
+		int_y = deboard_y
+		int_tile_x = start_draw_x
+		int_tile_y = start_draw_y
+		int_width = draw_width
+		int_height = draw_height
+		if lind == 3 then
+			Graphics.drawPartialImage(math.tointeger(200 - (hero_width / 2)), math.tointeger(120 - (hero_height / 2)), hero_tile_x, hero_tile_y, hero_width, hero_height, hero) -- Hero
+		end
+		while int_y < deboard_y + int_height do
+			t_dbd_y = int_tile_y % 32
+			while int_x < deboard_x + int_width do
+				t_dbd_x = int_tile_x % 32
+				layer_index = 1 + math.floor(int_tile_x / 32) + math.floor(int_tile_y / 32) * map_length
+				id = layers[lind][layer_index]
+				if id ~= -1 then
+					id_y = math.floor((id / tileset_length) * 32)
+					id_x = math.floor((id % tileset_length) * 32)
+					Graphics.drawPartialImage(int_x - t_dbd_x, int_y - t_dbd_y, id_x, id_y, 32, 32, t)
+				end
+				int_x = int_x + 32 - t_dbd_x
+				int_tile_x = int_tile_x + 32 - t_dbd_x
+			end
+			int_y = int_y + 32 - t_dbd_y
+			int_tile_y = int_tile_y + 32 - t_dbd_y
+			int_tile_x = start_draw_x
+			int_x = deboard_x
+		end
+		lind = lind + 1
+	end
 	Graphics.termBlend()
 end
 
