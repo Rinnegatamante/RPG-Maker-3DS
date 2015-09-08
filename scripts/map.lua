@@ -98,6 +98,15 @@ while in_game do
 	Screen.clear(TOP_SCREEN)
 	Screen.clear(BOTTOM_SCREEN)
 	
+	-- 3D Setup
+	if (Screen.get3DLevel() == 0) and three then
+		Screen.disable3D()
+		three = nil
+	elseif three == nil and (Screen.get3DLevel > 0) then
+		Screen.enable3D()
+		three = true
+	end
+	
 	-- Map Setup
 	start_draw_x = hero_x - 200
 	if start_draw_x < 0 then

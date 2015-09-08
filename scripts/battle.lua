@@ -86,6 +86,15 @@ function CallBattle(enemies,is_boss_fight)
 		Screen.clear(BOTTOM_SCREEN)
 		pad = Controls.read()
 		
+		-- 3D Setup
+		if (Screen.get3DLevel() == 0) and three then
+			Screen.disable3D()
+			three = nil
+		elseif three == nil and (Screen.get3DLevel > 0) then
+			Screen.enable3D()
+			three = true
+		end
+		
 		-- Drawing Scene
 		RenderBattleScene()
 		

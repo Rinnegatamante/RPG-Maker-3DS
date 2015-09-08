@@ -1,3 +1,10 @@
+-- 3D Settings
+mod_level3 = -0.8
+mod_level2 = -1.6
+mod_level1 = -2.4
+l_mods = {mod_level1, mod_level2, mod_level3}
+r_mods = {-mod_level1, -mod_level2, -mod_level3}
+
 function OneshotPrint(my_func)
 	my_func()
 	Screen.flip()
@@ -23,73 +30,103 @@ function FormatTime(seconds)
 end
 
 function RenderMapScene()
-	Graphics.initBlend(TOP_SCREEN)	
-	lind = 1
-	while lind <= 3 do
-		int_x = deboard_x
-		int_y = deboard_y
-		int_tile_x = start_draw_x
-		int_tile_y = start_draw_y
-		int_width = draw_width
-		int_height = draw_height
-		if lind == 3 then
-			Graphics.drawPartialImage(math.tointeger(200 - (hero_width / 2)), math.tointeger(120 - (hero_height / 2)), hero_tile_x, hero_tile_y, hero_width, hero_height, hero) -- Hero
-		end
-		while int_y < deboard_y + int_height do
-			t_dbd_y = int_tile_y % 32
-			while int_x < deboard_x + int_width do
-				t_dbd_x = int_tile_x % 32
-				layer_index = 1 + math.floor(int_tile_x / 32) + math.floor(int_tile_y / 32) * map_length
-				id = layers[lind][layer_index]
-				if id ~= -1 then
-					id_y = math.floor(id / tileset_length) * 32
-					id_x = math.floor((id % tileset_length) * 32)
-					Graphics.drawPartialImage(int_x - t_dbd_x, int_y - t_dbd_y, id_x, id_y, 32, 32, t)
-				end
-				int_x = int_x + 32 - t_dbd_x
-				int_tile_x = int_tile_x + 32 - t_dbd_x
+	eye = LEFT_EYE
+	while eye ~= 3 do
+		Graphics.initBlend(TOP_SCREEN, eye)	
+		if eye == LEFT_EYE then
+			x_mod = l_mods
+			if three then			
+				eye = RIGHT_EYE
+			else
+				eye = 3
 			end
-			int_y = int_y + 32 - t_dbd_y
-			int_tile_y = int_tile_y + 32 - t_dbd_y
-			int_tile_x = start_draw_x
-			int_x = deboard_x
+		else
+			x_mod = r_mods
+			eye = 3
 		end
-		lind = lind + 1
+		lind = 1
+		while lind <= 3 do
+			int_x = deboard_x
+			int_y = deboard_y
+			int_tile_x = start_draw_x
+			int_tile_y = start_draw_y
+			int_width = draw_width
+			int_height = draw_height
+			if lind == 3 then
+				Graphics.drawPartialImage(math.floor(x_mod[2] * Screen.get3DLevel() + math.tointeger(200 - (hero_width / 2))), math.tointeger(120 - (hero_height / 2)), hero_tile_x, hero_tile_y, hero_width, hero_height, hero) -- Hero
+			end
+			while int_y < deboard_y + int_height do
+				t_dbd_y = int_tile_y % 32
+				while int_x < deboard_x + int_width do
+					t_dbd_x = int_tile_x % 32
+					layer_index = 1 + math.floor(int_tile_x / 32) + math.floor(int_tile_y / 32) * map_length
+					id = layers[lind][layer_index]
+					if id ~= -1 then
+						id_y = math.floor(id / tileset_length) * 32
+						id_x = math.floor((id % tileset_length) * 32)
+						Graphics.drawPartialImage(math.floor(x_mod[lind] * Screen.get3DLevel() + int_x - t_dbd_x), int_y - t_dbd_y, id_x, id_y, 32, 32, t)
+					end
+					int_x = int_x + 32 - t_dbd_x
+					int_tile_x = int_tile_x + 32 - t_dbd_x
+				end
+				int_y = int_y + 32 - t_dbd_y
+				int_tile_y = int_tile_y + 32 - t_dbd_y
+				int_tile_x = start_draw_x
+				int_x = deboard_x
+			end
+			lind = lind + 1
+		end
+		Graphics.termBlend()
 	end
-	Graphics.termBlend()
 end
 
 function RenderBattleScene()
-	x = 30
-	y = 50
-	ch_x = x
-	ch_y = y
-	Graphics.initBlend(TOP_SCREEN)
-	Graphics.drawImage(0,0,bg_img)
-	for i,hero in pairs(battle_party) do
-		Graphics.drawPartialImage(x, y, 32, 64, 32, 32, hero)
-		x = x + 5
-		y = y + 50
-	end
-	-- TODO: Better enemies auto-locator
-	x = 300
-	y = 100
-	for i,enemy in pairs(battle_enemies) do
-		Graphics.drawImage(x, y, enemy[1])
-		x = x + 5
-		y = y + 50
-	end
-	Graphics.termBlend()
-	Screen.fillEmptyRect(5, 395, 5, 25, black, TOP_SCREEN)
-	Screen.fillRect(6, 394, 6, 24, window, TOP_SCREEN)
-	Font.print(def_font, 10, 7, battle_status, black, TOP_SCREEN)
-	for i,sel in pairs(party) do
-		if turn == sel then
-			x_s = ch_x + (5 * (i - 1))
-			y_s = ch_y * i
-			Screen.drawLine(x_s + 8, x_s + 24, y_s - 14, y_s - 14, black, TOP_SCREEN)
-			Screen.drawLine(x_s + 8, x_s + 16, y_s - 14, y_s - 4, black, TOP_SCREEN)
-			Screen.drawLine(x_s + 24, x_s + 16, y_s - 14, y_s - 4, black, TOP_SCREEN)
+	eye = LEFT_EYE
+	while eye ~= 3 do
+		Graphics.initBlend(TOP_SCREEN, eye)	
+		if eye == LEFT_EYE then
+			r_eye = LEFT_EYE
+			x_mod = l_mods
+			if three then			
+				eye = RIGHT_EYE
+			else
+				eye = 3
+			end
+		else
+			r_eye = RIGHT_EYE
+			x_mod = r_mods
+			eye = 3
+		end
+		x = 30
+		y = 50
+		ch_x = x
+		ch_y = y
+		Graphics.drawImage(math.floor(x_mod[1] * Screen.get3DLevel()),0,bg_img)
+		for i,hero in pairs(battle_party) do
+			Graphics.drawPartialImage(math.floor(x_mod[2] * Screen.get3DLevel() + x), y, 32, 64, 32, 32, hero)
+			x = x + 5
+			y = y + 50
+		end
+		-- TODO: Better enemies auto-locator
+		x = 300
+		y = 100
+		for i,enemy in pairs(battle_enemies) do
+			Graphics.drawImage(math.floor(x_mod[2] * Screen.get3DLevel() + x), y, enemy[1])
+			x = x + 5
+			y = y + 50
+		end
+		Graphics.termBlend()
+		Screen.fillEmptyRect(5, 395, 5, 25, black, TOP_SCREEN, r_eye)
+		Screen.fillRect(6, 394, 6, 24, window, TOP_SCREEN, r_eye)
+		Font.print(def_font, 10, 7, battle_status, black, TOP_SCREEN, r_eye)
+		for i,sel in pairs(party) do
+			if turn == sel then
+				x_s = ch_x + (5 * (i - 1))
+				y_s = ch_y * i
+				Screen.drawLine(x_s + 8, x_s + 24, y_s - 14, y_s - 14, black, TOP_SCREEN, r_eye)
+				Screen.drawLine(x_s + 8, x_s + 16, y_s - 14, y_s - 4, black, TOP_SCREEN, r_eye)
+				Screen.drawLine(x_s + 24, x_s + 16, y_s - 14, y_s - 4, black, TOP_SCREEN, r_eye)
+			end
 		end
 	end
 end

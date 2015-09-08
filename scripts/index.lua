@@ -28,6 +28,12 @@ while true do
 	Screen.refresh()
 	Screen.clear(BOTTOM_SCREEN)
 	
+	-- 3D Setup
+	if three then
+		Screen.disable3D()
+		three = nil
+	end
+	
 	-- Drawing Splashscreen
 	Screen.drawImage(0,0,splash,TOP_SCREEN)
 	

@@ -49,6 +49,13 @@ function ShowDialog(text,check_confirm)
 				for z,line2 in pairs(my_lines) do
 					Font.print(def_font,15,line2[2],line2[1],black,TOP_SCREEN)					
 				end
+				if three then
+					Screen.fillEmptyRect(5,395,180,235,Color.new(0,0,0),TOP_SCREEN, RIGHT_EYE)
+					Screen.fillRect(6,394,181,234,window,TOP_SCREEN, RIGHT_EYE)
+					for z,line2 in pairs(my_lines) do
+						Font.print(def_font,15,line2[2],line2[1],black,TOP_SCREEN, RIGHT_EYE)					
+					end
+				end
 				Screen.flip()
 				Screen.waitVblankStart()
 				pad = Controls.read()
@@ -73,6 +80,13 @@ function ShowDialog(text,check_confirm)
 		Screen.fillRect(6,394,181,234,window,TOP_SCREEN)
 		for z,line2 in pairs(my_lines) do
 			Font.print(def_font,15,line2[2],line2[1],black,TOP_SCREEN)					
+		end
+		if three then
+			Screen.fillEmptyRect(5,395,180,235,Color.new(0,0,0),TOP_SCREEN, RIGHT_EYE)
+			Screen.fillRect(6,394,181,234,window,TOP_SCREEN, RIGHT_EYE)
+			for z,line2 in pairs(my_lines) do
+				Font.print(def_font,15,line2[2],line2[1],black,TOP_SCREEN, RIGHT_EYE)					
+			end
 		end
 		Screen.flip()
 		Screen.waitVblankStart()
