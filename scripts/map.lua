@@ -229,7 +229,8 @@ while in_game do
 		-- Menu Controls
 		if Controls.check(pad, KEY_A) and not Controls.check(oldpad, KEY_A) then
 			if submode == "MAIN" then
-				if pause_i == 1 then
+				if pause_i == 1 then -- Items
+					dofile(System.currentDirectory().."/scripts/items.lua")
 				elseif pause_i == 2 then
 		
 				elseif pause_i == 3 then

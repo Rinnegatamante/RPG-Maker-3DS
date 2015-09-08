@@ -16,3 +16,7 @@ game_time = Timer.new()
 -- New Game Party
 party = {"hero1","hero2","hero3","hero4"}
 party_stats = {}
+inventory = {
+			{"Gloves",5},
+			{"Hat",2}
+		}

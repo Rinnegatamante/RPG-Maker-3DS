@@ -165,6 +165,38 @@ function RenderStatusMenu()
 	end
 end
 
+function RenderItemsMenu()
+
+	-- Drawing background
+	Screen.clear(BOTTOM_SCREEN)
+	Screen.fillEmptyRect(0 , 319, 0, 20, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 318, 1, 19, window, BOTTOM_SCREEN)
+	Screen.fillEmptyRect(0 , 250, 20, 239, white, BOTTOM_SCREEN)
+	Screen.fillRect(1 , 249, 21, 238, window, BOTTOM_SCREEN)
+	Screen.fillEmptyRect(250 , 319, 20, 239, white, BOTTOM_SCREEN)
+	Screen.fillRect(251 , 318, 21, 238, window, BOTTOM_SCREEN)
+	
+	-- Loading selected item description
+	if #inventory > 0 then
+	dofile(System.currentDirectory().."/items/"..inventory[items_i][1]..".lua")
+	end
+	Font.print(def_font, 3, 3, description, white, BOTTOM_SCREEN)
+	
+	-- Drawing item list (TODO: Scroll for big inventories)
+	y = 23
+	for i, item in pairs(inventory) do
+		if items_i == i then
+			Screen.fillRect(1, 249, 21 + 20 * (i - 1),  21 + 20 * i, Color.new(0, 128, 255), BOTTOM_SCREEN)
+			Font.print(def_font, 3, y, item[1], Color.new(255,255,0), BOTTOM_SCREEN)
+			Font.print(def_font, 240 - 5 * string.len(item[2]), y, item[2], Color.new(255,255,0), BOTTOM_SCREEN)
+		else
+			Font.print(def_font, 3, y, item[1], white, BOTTOM_SCREEN)
+			Font.print(def_font, 240 - 5 * string.len(item[2]), y, item[2], white, BOTTOM_SCREEN)
+		end
+		y = y + 20
+	end
+end
+
 function RenderPauseMenu()
 	y = 3
 	max_y = 20 * #pause_voices
